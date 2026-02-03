@@ -632,15 +632,23 @@ class FlickrMirrorer(object):
         sys.exit(1)
 
     @staticmethod
+    def _sanitize_filename(name):
+        """Replace characters that are problematic in filenames."""
+        # Replace / (Unix path separator) and characters invalid on Windows
+        for char in '/\\:*?"<>|':
+            name = name.replace(char, '_')
+        return name
+
+    @staticmethod
     def _get_album_dirname(id_, title):
-        safe_title = urllib.parse.quote(title.encode('utf-8'), " ',")
+        safe_title = FlickrMirrorer._sanitize_filename(title)
         # The ID is included in the name to avoid collisions when there
         # are two albums with the same name.
         return '%s - %s' % (safe_title, id_)
 
     @staticmethod
     def _get_collection_dirname(id_, title):
-        safe_title = urllib.parse.quote(title.encode('utf-8'), " ',")
+        safe_title = FlickrMirrorer._sanitize_filename(title)
         # The ID is included in the name to avoid collisions when there
         # are two collections with the same name.
         return '%s - %s' % (safe_title, id_)
