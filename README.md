@@ -1,7 +1,7 @@
 Overview
 ========
 A small command-line python script that creates a local backup of your
-Flickr data. It mirrors images, video metadata, titles, description, tags,
+Flickr data. It mirrors images, videos, metadata, titles, description, tags,
 albums and collections.
 
 Available at https://github.com/markdoliner/flickrmirrorer
@@ -131,9 +131,8 @@ To see more options run with the `--help` flag.
 
 A note about videos
 ===================
-The Flickr API does not support downloading original video files. If this
-script encounters videos in your photostream, it asks you download them
-(you must be logged in to your Flickr account).
+Videos are downloaded as MP4 files. These are re-encoded versions that Flickr
+provides for streaming, not the original uploaded files.
 
 
 Running unit tests
