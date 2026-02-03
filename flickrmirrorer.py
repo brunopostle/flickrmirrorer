@@ -280,16 +280,15 @@ class FlickrMirrorer(object):
 
             current_page += 1
 
-        # Error out if there were exceptions
+        # Warn about video download errors but continue
         if download_errors:
             sys.stderr.write(
-                'The Flickr API does not allow downloading original video files.\n'
+                'Some videos could not be downloaded automatically.\n'
                 'Please save the files listed below to the %s directory.\n'
                 'Note: You must be logged into your Flickr account in order to download '
-                'your full resolution videos!\n' % self.photostream_dir)
+                'your videos.\n' % self.photostream_dir)
             for error in download_errors:
                 sys.stderr.write('  %s\n' % error)
-            sys.exit(1)
 
         # Error out if we didn't fetch any photos
         if not new_files:
@@ -434,10 +433,8 @@ class FlickrMirrorer(object):
 
         # Add a version number to the album metadata. This gives us an
         # easy way to invalidate the local copy and cause the album to
-        # be recreated, if needed. More specifically this causes the
-        # albums to be recreated now that I've fixed the bug where
-        # symlinks to videos were broken.
-        album['flickrmirrorer_album_metadata_version'] = 2
+        # be recreated, if needed.
+        album['flickrmirrorer_album_metadata_version'] = 3
 
         metadata_filename = os.path.join(album_dir, 'metadata')
 
@@ -457,7 +454,11 @@ class FlickrMirrorer(object):
             # the local alphanumeric sort order matches the order on Flickr.
             digits = len(str(len(photos)))
             for i, photo in enumerate(photos):
-                photo_basename = self._get_photo_basename(photo)
+                try:
+                    photo_basename = self._get_photo_basename(photo)
+                except VideoDownloadError:
+                    # Skip videos that weren't downloaded
+                    continue
                 photo_fullname = os.path.join(self.photostream_dir, photo_basename)
                 photo_relname = os.path.relpath(photo_fullname, album_dir)
                 symlink_basename = '%s_%s' % (str(i+1).zfill(digits), photo_basename)
@@ -506,7 +507,10 @@ class FlickrMirrorer(object):
                 break
 
             for photo in photos:
-                photo_basename = self._get_photo_basename(photo)
+                try:
+                    photo_basename = self._get_photo_basename(photo)
+                except VideoDownloadError:
+                    continue
                 photo_fullname = os.path.join(self.photostream_dir, photo_basename)
                 photo_relname = os.path.relpath(photo_fullname, album_dir)
                 symlink_filename = os.path.join(album_dir, photo_basename)
