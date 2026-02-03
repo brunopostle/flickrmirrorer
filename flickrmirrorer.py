@@ -143,7 +143,11 @@ def get_photo_datetime(photo):
         # Unable to parse photo title as datetime
         pass
 
-    return dateutil.parser.parse(photo['datetaken'])
+    # Fall back to lastupdate if datetaken is invalid (e.g., "0000-00-00 00:00:00")
+    try:
+        return dateutil.parser.parse(photo['datetaken'])
+    except (ValueError, dateutil.parser.ParserError):
+        return datetime.datetime.fromtimestamp(int(photo['lastupdate']))
 
 
 class FlickrMirrorer(object):
