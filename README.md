@@ -132,7 +132,9 @@ To see more options run with the `--help` flag.
 A note about videos
 ===================
 Videos are downloaded as MP4 files. These are re-encoded versions that Flickr
-provides for streaming, not the original uploaded files.
+provides for streaming, not the original uploaded files. Some older videos may
+fail to download automatically - the script will provide manual download links
+for these, which give the original files.
 
 
 Running unit tests
