@@ -299,7 +299,7 @@ class FlickrMirrorer(object):
 
         # Divide by 2 because we want to ignore the photo metadata files
         # for the purposes of our statistics.
-        self.deleted_photos = self._delete_unknown_files(self.photostream_dir, new_files, 'file') / 2
+        self.deleted_photos = self._delete_unknown_files(self.photostream_dir, new_files, 'file') // 2
 
     def _download_photo(self, photo):
         """Fetch and save a media item (photo or video) and the metadata
