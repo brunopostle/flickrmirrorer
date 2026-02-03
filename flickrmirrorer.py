@@ -53,12 +53,7 @@ import time
 import urllib.parse
 import webbrowser
 
-try:
-    # We try importing simplejson first because it's faster than json
-    # in python 2.7 and lower
-    import simplejson as json
-except ImportError:
-    import json
+import json
 
 try:
     import flickrapi
