@@ -623,7 +623,10 @@ class FlickrMirrorer(object):
                     'Manual download required: '
                     'https://www.flickr.com/video_download.gne?id=%s' % photo['id'])
 
-            return os.path.basename(urllib.parse.urlparse(head.url).path)
+            # Use photo ID as basename with extension from URL
+            url_path = urllib.parse.urlparse(head.url).path
+            _, ext = os.path.splitext(url_path)
+            return '%s%s' % (photo['id'], ext)
 
         sys.stderr.write('Error: Unsupported media type "%s":\n' % mediatype)
         sys.stderr.write(json.dumps(photo, indent=2) + '\n')
