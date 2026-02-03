@@ -604,18 +604,7 @@ class FlickrMirrorer(object):
                 if not f.endswith('metadata'):
                     return os.path.basename(f)
 
-            # Otherwise, make an HTTP HEAD request to get the response
-            # headers we'd see when trying to download the photo. This
-            # URL gets redirected to the CDN with a URL that includes
-            # the video's original name.
-            # TODO: Note that this started failing on 2016-06-25. It
-            # seems to be impossible to download original video files
-            # via the Flickr API now. The best we can do is show the
-            # user a download URL and ask them to download. For a little
-            # more context see:
-            # https://www.flickr.com/groups/51035612836@N01/discuss/72157671986445591/72157673833636861
-            # https://groups.yahoo.com/neo/groups/yws-flickr/conversations/topics/9610
-            # https://groups.yahoo.com/neo/groups/yws-flickr/conversations/topics/9617
+            # Make an HTTP HEAD request to determine the file extension
             head = requests.head(self._get_photo_url(photo), allow_redirects=True)
             if head.status_code != 200:
                 raise VideoDownloadError(
